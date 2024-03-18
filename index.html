@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Madimi+One&family=Mirza:wght@500&family=Truculenta:opsz,wght@12..72,100..900&display=swap" rel="stylesheet">
+    <title>IJuana Match</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+        body {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url(BKG.png);
+        }
+        .container {
+            position: relative;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items:center;
+            gap: 30px;
+            background-color:rgb(162, 0, 255);
+            padding: 40px 60px;
+        }
+        h2 {
+            font-size: 3em;
+            color:rgb(59, 0, 107);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: "Truculenta", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .reset {
+            padding: 15px 20px;
+            color: rgb(255, 0, 238);
+            background-color:rgb(59, 0, 107);
+            border: none;
+            font-size: 1.5em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: "Truculenta", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .reset:focus {
+            color:rgb(59, 0, 107);
+            background-color:rgb(124, 0, 191);
+
+        }
+        .game {
+            width: 440px;
+            height: 440px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            transform-style: preserve-3d;
+            perspective: 500px;
+        }
+        .item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            font-size:3em;
+            background-color:rgb(99, 0, 102);
+            transform: rotateY(180deg);
+            transition: 0.5s;
+        }
+        .itemContents {
+            width: 100px;
+            height: 100px;
+        }
+        .item:after {
+            content:'';
+            position:absolute;
+            inset: 0;
+            /*opacity:0.85; */
+            background-color:rgb(99, 0, 102);
+            transition:0.5s;
+            transform: rotateY(0deg);
+            backface-visibility: hidden;
+        }
+        .item.boxOpen {
+            transform: rotateY(0deg);
+        }
+        .boxOpen:after ,
+        .boxMatch:after
+        {
+            transform: rotateY(180deg);
+        }
+        #Header img{
+            margin-right: 30px !important;
+            height: 400px;
+            width: 700px;
+            margin-top: 120px;
+        }
+        button{
+            width: 100%;
+            font-size: 15px;
+        }
+        .btn-primary {
+    --bs-btn-color: rgb(255, 0, 238);
+    --bs-btn-bg: rgb(179, 39, 255);
+    --bs-btn-border-color: rgb(124, 0, 191);
+    --bs-btn-hover-color: rgb(255, 0, 238);
+    --bs-btn-hover-bg: rgb(124, 0, 191);
+    --bs-btn-hover-border-color: rgb(124, 0, 191);
+    --bs-btn-focus-shadow-rgb: 49, 132, 253;
+    --bs-btn-active-color: rgb(255, 0, 238);
+    --bs-btn-active-bg: rgb(124, 0, 191);
+    --bs-btn-active-border-color: rgb(124, 0, 191);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: rgb(255, 0, 238);
+    --bs-btn-disabled-bg: rgb(124, 0, 191);
+    --bs-btn-disabled-border-color: rgb(124, 0, 191);
+}
+.btn{
+    font-size:30px;
+}
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-center">
+    <div id="Header" class="d-flex flex-column mb-3">
+    <img class="p-2" src="HEADER_IMAGE.png" alt="IJuanaMatch">
+    <a href="develop.html" class="p-2">
+    <button id="button" class="p-2 btn btn-primary" type="button">ABOUT THE DEVELOPERS</button>
+    </a>
+    </div>
+    <div class="container">
+        <h2>Memory Game</h2>
+        <div class="game"></div>
+        <button class="reset" onclick="window.location.reload()">Reset Game</button>
+    </div>
+</div>
+    <script>
+        const emojis = ['<img src="1.png" class="itemContents">', '<img src="1.png" class="itemContents">',
+                        '<img src="2.png" class="itemContents">', '<img src="2.png" class="itemContents">',
+                        '<img src="3.png" class="itemContents">', '<img src="3.png" class="itemContents">',
+                        '<img src="4.png" class="itemContents">', '<img src="4.png" class="itemContents">',
+                        '<img src="5.png" class="itemContents">', '<img src="5.png" class="itemContents">',
+                        '<img src="6.png" class="itemContents">', '<img src="6.png" class="itemContents">',
+                        '<img src="7.png" class="itemContents">', '<img src="7.png" class="itemContents">',
+                        '<img src="8.png" class="itemContents">', '<img src="8.png" class="itemContents">'];
+        var shuffleEmojis = emojis.sort(() => (Math.random() > .5) ? 2 : -1);
+        for ( var i = 0; i < emojis.length; i++) {
+            let box = document.createElement('div')
+            box.className = 'item';
+            box.innerHTML = shuffleEmojis[i]
+
+            box.onclick = function() {
+                this.classList.add('boxOpen')
+                setTimeout(function() {
+                    if(document.querySelectorAll('.boxOpen').length >1) {
+                        if(document.querySelectorAll('.boxOpen')[0].innerHTML ==document.querySelectorAll('.boxOpen')[1].innerHTML) {
+                            document.querySelectorAll('.boxOpen')[0].classList.add('boxMatch')
+                            document.querySelectorAll('.boxOpen')[1].classList.add('boxMatch')
+                            document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                            document.querySelectorAll('.boxOpen')[0].classList.remove('boxOpen')
+
+                            if(document.querySelectorAll('.boxMatch').length == emojis.length) {
+                                alert('CONGRATULATIONS! Happy National Womens Month')
+                            }
+                        } else {
+                            document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                            document.querySelectorAll('.boxOpen')[0].classList.remove('boxOpen')
+                        }
+                    }
+                },500)
+            }
+            document.querySelector('.game').appendChild(box);
+        }
+
+    </script>
+</body>
+</html>
